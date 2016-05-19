@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+  <h2 align="center">Emisja CO2 (kt) w roku {{year}}</h2>
+  <div style="text-align: center;">
+      <form action="." method="POST">
+          <select id="year" name="year">
+              <script>
+              var myDate = new Date();
+              var year = myDate.getFullYear();
+              for(var i = 1960; i < year; i++){
+                document.write('<option value="'+i+'">'+i+'</option>');
+              }
+              </script>
+            </select>
+          <input type="submit" name="my-form" value="Draw data">
+      </form>
+  </div>
+  <div id="container1" style="position: absolute; width: 700px; height: 700px; margin: auto; top: 0; right: 0; bottom: 0; left: 0;"></div>
+     <script>
+       //basic map config with custom fills, mercator projection
+       var map = new Datamap({
+          scope: 'world',
+          element: document.getElementById('container1'),
+          projection: 'mercator',
+          height: 700,
+          width: 1000,
+          highlightOnHover: true,
+          highlightFillColor: '#ffff00',
+          geographyConfig:{
+              popupTemplate: function(geography, data) { //this function should just return a string
+                  return '<div class="hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'CO2(kt):' + data.emision + ' '
+              }
+          },
+          fills: {
+              'A': '#8e3222',
+              'B': '#a33927',
+              'C': '#b7402c',
+              'D': '#cc4731',
+              'E': '#d25844',
+              'F': '#dc7d6d',
+              'G': '#6ddc7d',
+              'H': '#59d76b',
+              'I': '#31cc47',
+              'J': '#2cb740',
+              defaultFill: '#000000'
+          },
+          data: {
+                {% for country, emision in data1.iteritems() %}
+                    {{country|tojson}}: {"fillKey": "A", "emision" :{{emision|tojson}} },
+                {% endfor %}
+          }
+       })
+       map.updateChoropleth({
+           {%  for country, color in data2.iteritems() %}
+               {{country|tojson}}: {"fillKey": {{color|tojson}}},
+           {% endfor %}
+       });
+     </script>
+</body>

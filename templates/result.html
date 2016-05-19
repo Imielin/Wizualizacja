@@ -1,9 +1,0 @@
-{% extends "bootstrap/base.html" %}
-{% block body %}
-{% for result in results %}
-    {{ result }} : {{ results[result] }} <br>
-{% endfor %}
-{% if length < depth %}
-    <br><i>!!!Searching aborted - no new URL found!!!</i>
-{% endif %}
-{% endblock %}
