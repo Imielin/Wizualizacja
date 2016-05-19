@@ -1,0 +1,23 @@
+{% extends "bootstrap/base.html" %}
+{% block body %}
+{% if error %}<strong>Error:</strong> {{ error }}<br><br>{% endif %}
+
+<div class="container">
+    <h1></h1>
+    <form action="" method='POST'>
+        <div class="form-group">
+            <label for="start_url">Start URL</label>
+            <input type="url" class="form-control" id="start_url" placeholder="Start URL e.g. http://www.onet.pl/" value="{{ request.form.start_url }}" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="desired_word">Start URL</label>
+            <input type="url" class="form-control" id="desired_word" placeholder="Desired word" value="{{ request.form.desired_word }}" required >
+        </div>
+        <div class="form-group">
+            <label for="depth">Number of pages to visit</label>
+            <input type="number" min="1" class="form-control" name="depth" id="depth" placeholder="Number of pages to visit" value="{{ request.form.depth }}" required >
+        </div>
+        <button type="submit" class="btn btn-default">Search!</button>
+    </form>
+</div> <!-- /container -->
+{% endblock %}

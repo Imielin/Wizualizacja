@@ -1,0 +1,37 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block body %}
+ <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <!-- I recommend you host this file on your own, since this will change without warning -->
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+    <h1 align="center">{{year}}</h1>
+  <div id="container1" style="position:relative; left:20%;" >
+     <script>
+       //basic map config with custom fills, mercator projection
+      var map = new Datamap({
+        scope: 'world',
+        element: document.getElementById('container1'),
+        projection: 'equirectangular',
+        height: 700,
+        width: 1000,
+        geographyConfig:{
+            popupTemplate: function(geography, data) { //this function should just return a string
+          return '<div class="hoverinfo"><strong>' + geography.properties.name +'</strong><br>'+'Income:' +  data.income + ' '
+            }
+        },
+        fills: {
+          defaultFill: '#f0af0a'
+        },
+        data: {
+
+            {% for d, x in data.iteritems() %}
+             {{d|tojson}}: {"fillKey": 'gt50', "income" :{{x|tojson}} },
+                {% endfor %}
+        }
+      })
+     </script>
+</div>
+{% endblock %}
+
