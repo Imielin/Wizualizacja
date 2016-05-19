@@ -25,9 +25,12 @@
        var map = new Datamap({
           scope: 'world',
           element: document.getElementById('container1'),
-          projection: 'mercator',
+          projection: 'orthographic',
           height: 700,
           width: 1000,
+          projectionConfig: {
+          rotation: [0,0]
+           },
           highlightOnHover: true,
           highlightFillColor: '#ffff00',
           geographyConfig:{
