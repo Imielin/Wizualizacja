@@ -50,15 +50,7 @@ def home():
     data_environment2 = csv_data['colors']
     print(data_environment)
 
-    top = []
-    data_temp = csv_data.sort([year],ascending=False)
-    data_temp = data_temp.head(10)
-    for index, row in data_temp.iterrows():
-        if (pandas.isnull(row[year])):
-            top.append([row[0], 0])
-        else:
-            top.append([row[0], row[year]])
-    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj, top=top)
+    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj)
 
 
 @app.route('/', methods=['POST'])
@@ -100,6 +92,18 @@ def home_form_post():
     data_environment2 = csv_data['colors']
     print(data_environment)
 
+    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj)
+
+
+@app.route('/about')
+def about():
+    filename = os.path.join(APP_DATA, 'narodziny.csv')
+    csv_data = pandas.read_csv('data/narodziny.csv', delimiter=',', index_col='Country Code')
+    year = '1960'
+    proj = '0,0'
+    csv_data = csv_data.round(2)
+    data_environment = csv_data[year]
+
     top = []
     data_temp = csv_data.sort([year], ascending=False)
     data_temp = data_temp.head(10)
@@ -109,12 +113,16 @@ def home_form_post():
         else:
             top.append([row[0], row[year]])
 
-    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj, top=top)
+    low = []
 
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
+    data_temp = csv_data.sort([year], ascending=True)
+    data_temp = data_temp.head(10)
+    for index, row in data_temp.iterrows():
+        if (pandas.isnull(row[year])):
+            low.append([row[0], 0])
+        else:
+            low.append([row[0], row[year]])
+    return render_template('about.html', top=top, low=low)
 
 
 @app.route('/contact')

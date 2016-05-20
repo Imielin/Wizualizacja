@@ -12,7 +12,7 @@
     <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
 </head>
 <body style="padding-top: 65px; ">
-  <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
           <nav class="navbar navbar-static-top navbar-dark bg-inverse">
               <a class="navbar-brand" href="/">Maciej Bojdak</a>
@@ -31,9 +31,48 @@
       <div class="row">
           <u><h2 align="left">Informacje:</h2></u>
           <h3 align="left">
-              Projekt pokazujący wizualizację danych liczby urodzin oraz zarobków w różnych krajach.
+              Projekt pokazujący wizualizację danych liczby urodzin oraz zarobków w różnych krajach. Tutaj top 10 oraz low 10.
           </h3>
       </div>
   </div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script type="text/javascript">
+      google.load('visualization', '1', {'packages':['corechart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Born');
+        data.addRows( {{ top|tojson }} );
+        var options = {
+          title: 'Top 10 Krajów z najwyższą liczbą urodzeń'
+        };
+
+        var chart = new google.visualization.PieChart(
+                document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+      </script>
+
+<div id="chart_div" style="width: 500px; height: 500px;">></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script type="text/javascript">
+      google.load('visualization', '1', {'packages':['corechart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Born');
+        data.addRows( {{ low|tojson }} );
+        var options = {
+          title: 'Top 10 Krajów z najniższą liczbą urodzeń'
+        };
+
+        var chart = new google.visualization.PieChart(
+                document.getElementById('chart_div2'));
+        chart.draw(data, options);
+      }
+      </script>
+  <div id="chart_div2" style=" width: 500px; height: 500px;">></div>
 </body>
 </html>

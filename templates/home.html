@@ -12,7 +12,7 @@
     <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
 </head>
 <body style="padding-top: 65px; ">
-  <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
           <nav class="navbar navbar-static-top navbar-dark bg-inverse">
               <a class="navbar-brand" href="/">Maciej Bojdak</a>
@@ -55,8 +55,12 @@
               <input type="submit" name="my-form" value="Rysuj mapę">
           </form>
       </div>
-  </div>
-  <div id="chart_div"></div>
+</div>
+      <br>
+      <br>
+
+      <br>
+      <br>
   <div class="container" id="container1" style="position: absolute; width: 700px; height: 700px; margin: auto; top: 65px; right: 0; bottom: 0; left: 0;"></div>
      <script>
        //basic map config with custom fills, mercator projection
@@ -64,8 +68,8 @@
           scope: 'world',
           element: document.getElementById('container1'),
           projection: 'orthographic',
-          height: 700,
-          width: 1000,
+          height: 600,
+          width: 800,
           projectionConfig: {
           rotation: [{{proj}}]
            },
@@ -102,22 +106,10 @@
        });
      </script>
 
-  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-      <script type="text/javascript">
-      google.load('visualization', '1', {'packages':['corechart']});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Country');
-        data.addColumn('number', 'Born');
-        data.addRows( {{ top|tojson }} );
-        var chart = new google.visualization.ColumnChart(
-                document.getElementById('chart_div'));
-        chart.draw(data, {legend: 'none', vAxis: {baseline: 0} });
-      }
-      </script>
+
   <footer>
 
   </footer>
+
 </body>
 </html>
