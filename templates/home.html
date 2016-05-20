@@ -1,25 +1,63 @@
 <!DOCTYPE html>
+<html>
 <meta charset="utf-8">
-<body>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="http://d3js.org/topojson.v1.min.js"></script>
-  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
-  <h2 align="center">Emisja CO2 (kt) w roku {{year}}</h2>
-  <div style="text-align: center;">
-      <form action="." method="POST">
-          <select id="year" name="year">
-              <script>
-              var myDate = new Date();
-              var year = myDate.getFullYear();
-              for(var i = 1960; i < year; i++){
-                document.write('<option value="'+i+'">'+i+'</option>');
-              }
-              </script>
-            </select>
-          <input type="submit" name="my-form" value="Draw data">
-      </form>
+<head>
+    <title>Wizualizacja</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+</head>
+<body style="padding-top: 65px; ">
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+          <nav class="navbar navbar-static-top navbar-dark bg-inverse">
+              <a class="navbar-brand" href="/">Maciej Bojdak</a>
+              <ul class="nav navbar-nav">
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/about">Informacje</a>
+                  </li>
+              </ul>
+          </nav>
+      </div>
   </div>
-  <div id="container1" style="position: absolute; width: 700px; height: 700px; margin: auto; top: 0; right: 0; bottom: 0; left: 0;"></div>
+  <div class="container">
+      <div class="row">
+          <h2 align="center">Wizualizacja danych</h2>
+      </div>
+  </div>
+  <div class="container" style="text-align: center;">
+      <div class="row">
+          <form action="." method="POST">
+              Dane z roku:
+              <select id="year" name="year">
+                  <script>
+                      var myDate = new Date();
+                      var year = myDate.getFullYear();
+                      for(var i = 1960; i <= 2011; i++){
+                          document.write('<option value="'+i+'">'+i+'</option>');
+                      }
+                  </script>
+              </select>
+              roku
+            <select id="projSel" name="projSel" selected='{{proj}}'>
+              <option value='0,0'>Rzut 1</option>
+              <option value='0,180'>Rzut 2</option>
+              <option value='90,0'>Rzut 3</option>
+              <option value='180,0'>Rzut 4</option>
+            </select>
+              <input type="submit" name="my-form" value="Rysuj mapę">
+          </form>
+      </div>
+  </div>
+  <div id="chart_div"></div>
+  <div class="container" id="container1" style="position: absolute; width: 700px; height: 700px; margin: auto; top: 65px; right: 0; bottom: 0; left: 0;"></div>
      <script>
        //basic map config with custom fills, mercator projection
        var map = new Datamap({
@@ -29,13 +67,13 @@
           height: 700,
           width: 1000,
           projectionConfig: {
-          rotation: [0,0]
+          rotation: [{{proj}}]
            },
           highlightOnHover: true,
           highlightFillColor: '#ffff00',
           geographyConfig:{
               popupTemplate: function(geography, data) { //this function should just return a string
-                  return '<div class="hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'CO2(kt):' + data.emision + ' '
+                  return '<div class="hoverinfo"><strong>' + geography.properties.name + '</strong><br>' + 'Współczynnik urodzeń [%]:' + data.emision + ' '
               }
           },
           fills: {
@@ -63,4 +101,23 @@
            {% endfor %}
        });
      </script>
+
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script type="text/javascript">
+      google.load('visualization', '1', {'packages':['corechart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'Born');
+        data.addRows( {{ top|tojson }} );
+        var chart = new google.visualization.ColumnChart(
+                document.getElementById('chart_div'));
+        chart.draw(data, {legend: 'none', vAxis: {baseline: 0} });
+      }
+      </script>
+  <footer>
+
+  </footer>
 </body>
+</html>

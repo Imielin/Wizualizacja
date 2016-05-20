@@ -1,12 +1,39 @@
-{% extends "base.html" %}
-
-
-{% block js %}
-{% endblock %}
-
-<div class="page-header">
-    <h1>Raw data</h1>
-</div>
-
-{% block main %}
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+    <title>Wizualizacja Danych</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
+</head>
+<body style="padding-top: 65px; ">
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+          <nav class="navbar navbar-static-top navbar-dark bg-inverse">
+              <a class="navbar-brand" href="/">Maciej Bojdak</a>
+              <ul class="nav navbar-nav">
+                  <li class="nav-item">
+                      <a class="nav-link" href="/">Home</a>
+                  </li>
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/about">Informacje</a>
+                  </li>
+              </ul>
+          </nav>
+      </div>
+  </div>
+  <div class="container">
+      <div class="row">
+          <u><h2 align="left">Informacje:</h2></u>
+          <h3 align="left">
+              Projekt pokazujący wizualizację danych liczby urodzin oraz zarobków w różnych krajach.
+          </h3>
+      </div>
+  </div>
+</body>
+</html>

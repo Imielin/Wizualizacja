@@ -14,69 +14,82 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'this_should_be_configur
 @app.route('/index')
 @app.route('/home')
 def home():
-    filename = os.path.join(APP_DATA,'API_EN.ATM.CO2E.KT_DS2_en_csv_v2.csv')
-    csv_data = pandas.read_csv('data\API_EN.ATM.CO2E.KT_DS2_en_csv_v2.csv', delimiter=',', index_col='Country Code')
-    year = '1970'
+    filename = os.path.join(APP_DATA,'narodziny.csv')
+    csv_data = pandas.read_csv('data/narodziny.csv', delimiter=',', index_col='Country Code')
+    year = '1960'
+    proj = '0,0'
     csv_data = csv_data.round(2)
     data_environment = csv_data[year]
     colors = []
     for row in data_environment:
-        if row > 2500000:
+        if row > 54:
             colors.append('A')
-        elif row > 1000000:
+        elif row > 48:
             colors.append('B')
-        elif row > 500000:
+        elif row > 42:
             colors.append('C')
-        elif row > 100000:
+        elif row > 36:
             colors.append('D')
-        elif row > 50000:
+        elif row > 30:
             colors.append('E')
-        elif row > 10000:
+        elif row > 24:
             colors.append('F')
-        elif row > 1000:
+        elif row > 18:
             colors.append('G')
-        elif row > 500:
+        elif row > 12:
             colors.append('H')
-        elif row > 100:
+        elif row > 6:
             colors.append('I')
         elif row > 0:
             colors.append('J')
         else:
             colors.append('Failed')
+
     csv_data['colors'] = colors
     data_environment1 = csv_data[year]
     data_environment2 = csv_data['colors']
     print(data_environment)
-    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year)
+
+    top = []
+    data_temp = csv_data.sort([year],ascending=False)
+    data_temp = data_temp.head(10)
+    for index, row in data_temp.iterrows():
+        if (pandas.isnull(row[year])):
+            top.append([row[0], 0])
+        else:
+            top.append([row[0], row[year]])
+    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj, top=top)
+
 
 @app.route('/', methods=['POST'])
 @app.route('/index', methods=['POST'])
 @app.route('/home', methods=['POST'])
 def home_form_post():
-    filename = os.path.join(APP_DATA,'API_EN.ATM.CO2E.KT_DS2_en_csv_v2.csv')
-    csv_data = pandas.read_csv('data\API_EN.ATM.CO2E.KT_DS2_en_csv_v2.csv', delimiter=',', index_col='Country Code')
+    filename = os.path.join(APP_DATA,'narodziny.csv')
+    csv_data = pandas.read_csv('data/narodziny.csv', delimiter=',', index_col='Country Code')
     year = request.form['year']
+    proj = request.form['projSel']
     csv_data = csv_data.round(2)
     data_environment = csv_data[year]
     colors = []
     for row in data_environment:
-        if row > 2500000:
+        if row > 54:
             colors.append('A')
-        elif row > 1000000:
+        elif row > 48:
             colors.append('B')
-        elif row > 500000:
+        elif row > 42:
             colors.append('C')
-        elif row > 100000:
+        elif row > 36:
             colors.append('D')
-        elif row > 50000:
+        elif row > 30:
             colors.append('E')
-        elif row > 10000:
+        elif row > 24:
             colors.append('F')
-        elif row > 1000:
+        elif row > 18:
             colors.append('G')
-        elif row > 500:
+        elif row > 12:
             colors.append('H')
-        elif row > 100:
+        elif row > 6:
             colors.append('I')
         elif row > 0:
             colors.append('J')
@@ -86,18 +99,34 @@ def home_form_post():
     data_environment1 = csv_data[year]
     data_environment2 = csv_data['colors']
     print(data_environment)
-    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year)
 
-@app.route('/about/')
+    top = []
+    data_temp = csv_data.sort([year], ascending=False)
+    data_temp = data_temp.head(10)
+    for index, row in data_temp.iterrows():
+        if (pandas.isnull(row[year])):
+            top.append([row[0], 0])
+        else:
+            top.append([row[0], row[year]])
+
+    return render_template('home.html', data1=data_environment1, data2=data_environment2, year=year, proj=proj, top=top)
+
+
+@app.route('/about')
 def about():
-    """Render the website's about page."""
     return render_template('about.html')
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
-    """Send your static text file."""
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
+
 
 @app.after_request
 def add_header(response):
@@ -112,5 +141,4 @@ def page_not_found(error):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
